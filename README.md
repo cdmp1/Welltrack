@@ -9,7 +9,7 @@ TypeScript
 HTML / SCSS
 
 ## ⚙️ Ejecución 
-1) Clona el proyecto: https://github.com/cdmp1/SkeletonAPP.git
+1) Clona el proyecto: git clone https://github.com/cdmp1/SkeletonAPP.git
 
 2) Instala las dependencias: npm install
 
