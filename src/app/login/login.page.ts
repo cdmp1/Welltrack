@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -12,7 +13,7 @@ export class LoginPage {
   usuario: string = '';
   password: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private loadingController: LoadingController) {}
 
   login() {
     // Validaciones
@@ -33,5 +34,9 @@ export class LoginPage {
     this.router.navigate(['/home'], {
       state: { usuario: this.usuario }
     });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 }

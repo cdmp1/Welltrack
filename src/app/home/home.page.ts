@@ -69,4 +69,26 @@ export class HomePage implements OnInit {
 
     await alert.present();
   }
+
+
+async logOut() {
+  const alert = await this.alertCtrl.create({
+    header: 'Cerrar sesión',
+    message: '¿Estás seguro que quieres cerrar sesión?',
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel'
+      },
+      {
+        text: 'Sí',
+        handler: () => {
+          this.router.navigate(['/login']);
+        }
+      }
+    ]
+  });
+  await alert.present();
+}
+
 }

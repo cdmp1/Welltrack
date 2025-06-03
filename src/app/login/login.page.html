@@ -3,7 +3,7 @@
   <h1 style="text-align: center; margin-top: 50px;">SkeletonAPP</h1>
   <p style="text-align: center; margin-bottom: 100px;">Aquí comienza todo</p>
 
-  <h3 style="text-align: center;">¡Bienvenido/a!</h3>
+  <h3 style="text-align: center; margin-bottom: 15px;">¡Bienvenido/a!</h3>
 
   <div style="max-width: 400px; margin: 0 auto;">
     <form (ngSubmit)="login()">
@@ -19,13 +19,14 @@
           pattern="\\d*"></ion-input>
       </ion-item>
 
-      <ion-button expand="block" type="submit">Ingresar</ion-button>
+      <ion-button style="margin-top: 15px;" expand="block" type="submit">Ingresar</ion-button>
     </form>
 
 
-    <ion-text style="display: block; text-align: center; margin-top: 20px;">
-      <a href="/registro" style="text-decoration: none;">Crea tu cuenta gratis</a>
+    <ion-text style="display: block; text-align: center; margin-top: 15px;">
+      <ion-button fill="clear" (click)="goToRegister()">Crea tu cuenta gratis</ion-button>
     </ion-text>
+
   </div>
 
 </ion-content>
