@@ -1,20 +1,60 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      SkeletonAPP
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Home</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content class="ion-padding">
+  <h1 style="text-align: center; margin-top: 50px;">¡Bienvenido/a!</h1>
+  <p style="text-align: center; margin-bottom: 80px;">Usuario: {{ usuario }}</p>
+
+
+  <h3 style="text-align: center;">Información Adicional</h3>
+
+  <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Nombre</mat-label>
+    <input matInput [(ngModel)]="nombre" />
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Apellido</mat-label>
+    <input matInput [(ngModel)]="apellido" />
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Nivel Educación</mat-label>
+    <mat-select [(ngModel)]="nivelEducacion">
+      <mat-option value="SinEducacion">Sin educación formal</mat-option>
+      <mat-option value="Primaria">Primaria (Básica)</mat-option>
+      <mat-option value="Secundaria">Secundaria (Media)</mat-option>
+      <mat-option value="Tecnico">Técnico-profesional</mat-option>
+      <mat-option value="Universitaria">Universitaria (Pregrado)</mat-option>
+      <mat-option value="Postgrado">Postgrado</mat-option>
+      <mat-option value="Otro">Otro</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Fecha Nacimiento</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaNacimiento" readonly />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <div style="display: flex; gap: 50px; margin-top: 20px;">
+      <ion-button expand="block" color="dark" (click)="limpiarCampos()" style="flex: 1;">Limpiar</ion-button>
+      <ion-button expand="block" (click)="mostrarDatos()" style="flex: 1;">Mostrar</ion-button>
+    </div>
   </div>
+
+
+  <div class="footer" style="margin-top: 80px;">App desarrollada por CMP</div>
 </ion-content>
