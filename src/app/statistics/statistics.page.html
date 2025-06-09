@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+      W E L L T R A C K
+    </ion-title>
+<ion-buttons slot="end">
+<ion-menu-button color="medium"></ion-menu-button>
+</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="margin-top: 50px; margin-bottom: 50px;">
+    <h2 style="font-family:monospace; text-align: center;">RESUMEN DE BIENESTAR</h2>
+  </div>
+
+  <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; justify-content: center; gap: 100px;">
+  <ion-card style="border: 2px solid rgb(162, 228, 95); border-radius: 12px;">
+    <ion-card-content *ngIf="totalDias > 0; else noData">
+      <h2 style="font-family:monospace"><strong>Días registrados:</strong> {{ totalDias }}</h2>
+            <h2 style="font-family:monospace"><strong>Días ejercitándote:</strong> {{ diasEjercicio }}</h2>
+      <h2 style="font-family:monospace"><strong>Promedio de horas de sueño:</strong> {{ promedioSueno }} horas</h2>
+      <h2 style="font-family:monospace"><strong>Ánimo más frecuente:</strong> {{ estadoAnimoFrecuente | titlecase }}</h2>
+    </ion-card-content>
+  </ion-card>
+</div>
+
+
+        <ng-template #noData>
+      <ion-text color="medium">
+        <p>Aún no has registrado datos para mostrar un resumen.</p>
+      </ion-text>
+    </ng-template>
+
+        <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px;">
+  <lottie-player 
+    src="/assets/statisticsAnimation.json" 
+    background="transparent" 
+    speed="1" 
+    loop 
+    autoplay 
+    style="width: 300px; height: 200px;">
+  </lottie-player>
+</div>
+
+<div style="display: flex; justify-content: center;">
+    <ion-card style="border-radius: 25px; border: 2px dashed rgb(171, 171, 171); box-shadow: 2px 2px 8px rgba(0,0,0,0.1);" *ngIf="fraseMotivacional">
+  <ion-card-content>
+    <ion-text color="primary">
+      <h3 style="font-family: monospace; text-align: center;">Recuerda esto hoy:</h3>
+      <p style="font-style: italic; font-size: large; font-family:monospace; text-align: center;">
+        "{{ fraseMotivacional }}"
+      </p>
+    </ion-text>
+  </ion-card-content>
+</ion-card>
+</div>
+
+</div>
+
+
+  <div class="footer" style="margin-top: 80px;">App desarrollada por CMP</div>
+</ion-content>

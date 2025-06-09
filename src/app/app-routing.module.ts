@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -18,6 +18,14 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'daily-tracking',
+    loadChildren: () => import('./daily-tracking/daily-tracking.module').then( m => m.DailyTrackingPageModule)
+  },
+  {
+    path: 'statistics',
+    loadChildren: () => import('./statistics/statistics.module').then( m => m.StatisticsPageModule)
   },
 ];
 

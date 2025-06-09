@@ -1,63 +1,106 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      SkeletonAPP
+    <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+      W E L L T R A C K
     </ion-title>
-    <ion-buttons slot="end"> Cerrar Sesión
-      <ion-button (click)="logOut()"> 
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="end">
+<ion-menu-button color="medium"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content class="ion-padding">
-  <h1 style="text-align: center; margin-top: 50px;">¡Bienvenido/a!</h1>
-  <p style="text-align: center; margin-bottom: 80px;">Usuario: {{ usuario }}</p>
+  <ion-card
+    style="border: 2px solid rgb(162, 228, 95); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; margin-top: 50px; margin-bottom: 70px;">
+    <ion-card-content style="text-align: center;">
+      <h1 style="font-family:monospace; color:rgb(143, 143, 143); margin-bottom: 0;"><strong>¡Bienvenido/a!</strong>
+      </h1>
+      <h4 style="font-family:monospace; color:rgb(162, 228, 95); margin-top: 10px;"><strong>Usuario: {{ usuario
+          }}</strong></h4>
+    </ion-card-content>
+  </ion-card>
 
-
-  <h3 style="text-align: center;">Información Adicional</h3>
+  <h2 style="font-family:monospace; text-align: center;">TU INFORMACIÓN</h2>
 
   <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-  <mat-form-field appearance="fill" style="width: 100%;">
-    <mat-label>Nombre</mat-label>
-    <input matInput [(ngModel)]="nombre" />
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="nombre" [disabled]="!modoEdicion" />
+    </mat-form-field>
 
 
-  <mat-form-field appearance="fill" style="width: 100%;">
-    <mat-label>Apellido</mat-label>
-    <input matInput [(ngModel)]="apellido" />
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Apellido Paterno</mat-label>
+      <input matInput [(ngModel)]="apellidoPaterno" [disabled]="!modoEdicion" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Apellido Materno</mat-label>
+      <input matInput [(ngModel)]="apellidoMaterno" [disabled]="!modoEdicion" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Fecha Nacimiento</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="fechaNacimiento" readonly [disabled]="!modoEdicion" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Género</mat-label>
+      <mat-select [(ngModel)]="genero" [disabled]="!modoEdicion">
+        <mat-option value="masculino">Masculino</mat-option>
+        <mat-option value="femenino">Femenino</mat-option>
+        <mat-option value="noBinario">No binario</mat-option>
+        <mat-option value="otro">Otro</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Objetivo Principal</mat-label>
+      <mat-select [(ngModel)]="objetivo" [disabled]="!modoEdicion">
+        <mat-option value="DormirMejor">Dormir mejor</mat-option>
+        <mat-option value="MasDeporte">Ejercitarme más</mat-option>
+        <mat-option value="ReducirEstres">Reducir estrés</mat-option>
+        <mat-option value="ControlHabitos">Llevar el control de hábitos</mat-option>
+      </mat-select>
+    </mat-form-field>
 
 
-  <mat-form-field appearance="fill" style="width: 100%;">
-    <mat-label>Nivel Educación</mat-label>
-    <mat-select [(ngModel)]="nivelEducacion">
-      <mat-option value="SinEducacion">Sin educación formal</mat-option>
-      <mat-option value="Primaria">Primaria (Básica)</mat-option>
-      <mat-option value="Secundaria">Secundaria (Media)</mat-option>
-      <mat-option value="Tecnico">Técnico-profesional</mat-option>
-      <mat-option value="Universitaria">Universitaria (Pregrado)</mat-option>
-      <mat-option value="Postgrado">Postgrado</mat-option>
-      <mat-option value="Otro">Otro</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-label>¿Deseas recibir notificaciones de recordatorios?</mat-label>
+    <mat-radio-group [(ngModel)]="recibirNotificaciones" [disabled]="!modoEdicion">
+      <mat-radio-button value="si">Sí</mat-radio-button>
+      <mat-radio-button value="no">No</mat-radio-button>
+    </mat-radio-group>
 
-
-  <mat-form-field appearance="fill" style="width: 100%;">
-    <mat-label>Fecha Nacimiento</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaNacimiento" readonly />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-
-
-  <div style="display: flex; gap: 50px; margin-top: 20px;">
-      <ion-button expand="block" color="dark" (click)="limpiarCampos()" style="flex: 1;">Limpiar</ion-button>
-      <ion-button expand="block" (click)="mostrarDatos()" style="flex: 1;">Mostrar</ion-button>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+      <ion-button *ngIf="!modoEdicion" color="primary" (click)="modoEdicion = true">
+        Editar Información
+      </ion-button>
     </div>
+
+    <div *ngIf="modoEdicion" style="display: flex; gap: 50px; margin-top: 10px; margin-bottom: 30px;">
+      <ion-button expand="block" color="medium" (click)="limpiarCampos()" style="flex: 1;">Limpiar</ion-button>
+      <ion-button expand="block" color="primary" (click)="guardarDatos(); modoEdicion = false"
+        style="flex: 1;">Guardar</ion-button>
+    </div>
+
+
+    <div style="display: flex; justify-content: center; margin: 30px 0;">
+      <ion-button expand="block" size="large" fill="outline" style="
+      --border-radius: 12px;
+      --padding-start: 40px;
+      --padding-end: 40px;
+      font-weight: bold;
+      --border-color: rgb(162, 228, 95);
+      --color: rgb(143, 143, 143);
+      font-family: monospace;
+    " (click)="irADailyTracking()">
+        Iniciar Seguimiento ✔️
+      </ion-button>
+    </div>
+
   </div>
 
 

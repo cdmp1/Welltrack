@@ -1,0 +1,84 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+      W E L L T R A C K 
+    </ion-title>
+<ion-buttons slot="end">
+<ion-menu-button color="medium"></ion-menu-button>
+</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <div style="margin-top: 50px; margin-bottom: 50px;">
+    <h2 style="font-family:monospace; text-align: center;">SEGUIMIENTO DEL DÍA</h2>
+  </div>
+
+  <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    <div style="display: flex; justify-content: center;">
+      <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="fecha" (ionChange)="onFechaChange()" presentation="date">
+      </ion-datetime>
+    </div>
+
+    <p style="text-align: center; margin-bottom: 50px;"><strong>Fecha seleccionada:</strong> {{ fecha | date:'fullDate'
+      }}</p>
+
+
+    <ion-item>
+      <ion-label>¿Cómo te sientes?</ion-label>
+      <ion-select [(ngModel)]="animo" interface="popover" slot="end">
+        <ion-select-option value="feliz">Feliz</ion-select-option>
+        <ion-select-option value="optimista">Optimista</ion-select-option>
+        <ion-select-option value="energetico">Energético</ion-select-option>
+        <ion-select-option value="tranquilo">Relajado</ion-select-option>
+        <ion-select-option value="neutral">Neutral</ion-select-option>
+        <ion-select-option value="cansado">Cansado</ion-select-option>
+        <ion-select-option value="estresado">Estresado</ion-select-option>
+        <ion-select-option value="ansioso">Ansioso</ion-select-option>
+        <ion-select-option value="triste">Triste</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label>¿Cómo dormiste anoche?</ion-label>
+      <ion-select [(ngModel)]="sueno" interface="popover" slot="end">
+        <ion-select-option value="excelente">Excelente</ion-select-option>
+        <ion-select-option value="bien">Bien</ion-select-option>
+        <ion-select-option value="regular">Regular</ion-select-option>
+        <ion-select-option value="mal">Mal</ion-select-option>
+        <ion-select-option value="no">No dormí</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+
+<ion-item>
+  <ion-label>¿Cuántas horas dormiste?</ion-label>
+  <ion-select [(ngModel)]="horasSueno" interface="popover" slot="end">
+    <ion-select-option *ngFor="let hora of horasArray" [value]="hora">{{ hora }}</ion-select-option>
+  </ion-select>
+</ion-item>
+
+
+    <ion-item>
+      <ion-label>¿Te ejercitaste?</ion-label>
+      <ion-toggle [(ngModel)]="ejercicio" slot="end"></ion-toggle>
+    </ion-item>
+
+
+    <ion-item lines="none">
+      <ion-textarea [(ngModel)]="notas" placeholder="Espacio para escribir tus notas diarias..."
+        style="text-align: down;">
+      </ion-textarea>
+    </ion-item>
+
+
+    <ion-button expand="block" (click)="guardarSeguimiento()" [disabled]="!formularioValido()">
+      Guardar Seguimiento
+    </ion-button>
+  </div>
+
+
+  <div class="footer" style="margin-top: 80px;">App desarrollada por CMP</div>
+</ion-content>
