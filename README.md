@@ -1,7 +1,10 @@
-# 📱 SkeletonAPP
-Aplicación móvil desarrollada con Ionic Framework, Angular y Angular Material.
+# 🪷 WELLTRACK
+Aplicación móvil desarrollada con Ionic Framework, Angular y Angular Material, diseñada para ayudarte a mejorar tu bienestar diario mediante el seguimiento de hábitos clave.
 
-## 🛠️ Tecnologías utilizadas
+## 🚧 Estado del proyecto
+🔨 En desarrollo
+
+## 📱 Tecnologías utilizadas
 - Node.js  
 - Ionic Framework  
 - Angular  

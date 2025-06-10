@@ -11,25 +11,28 @@
   text-decoration: none;
 }
 
-
 ::ng-deep .cdk-overlay-container {
   z-index: 1000;
 }
 
-::ng-deep .mat-select-panel,
 ::ng-deep .mat-datepicker-content {
   background-color: #555 !important; 
   color: #fff !important;           
   border-radius: 8px;
 }
 
+::ng-deep .mat-select-panel {
+  background-color: #555 !important; 
+  color: white !important;
+}
+
 ::ng-deep .mat-option {
-  color: #fff !important;
-  background-color: #555 !important;
+  background-color: #555 !important; 
+  color: white !important;
 }
 
 ::ng-deep .mat-option:hover {
-  background-color: #a0a0a0 !important;
+  background-color: #b9b9b9 !important;
 }
 
 

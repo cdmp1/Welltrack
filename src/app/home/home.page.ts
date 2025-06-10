@@ -24,7 +24,6 @@ export class HomePage implements OnInit {
   genero: string = '';
   objetivo: string = '';
   fechaNacimiento: Date | null = null;
-  frecuenciaElegida: string = '';
 
   datosGuardados: any = {};
 
@@ -61,7 +60,6 @@ export class HomePage implements OnInit {
       this.genero = this.datosGuardados.genero || '';
       this.objetivo = this.datosGuardados.objetivo || '';
       this.fechaNacimiento = this.datosGuardados.fechaNacimiento || null;
-      this.frecuenciaElegida = this.datosGuardados.frecuenciaElegida || '';
     }
   }
 
@@ -77,7 +75,6 @@ export class HomePage implements OnInit {
     this.genero = recuperados.genero || '';
     this.objetivo = recuperados.objetivo || '';
     this.fechaNacimiento = recuperados.fechaNacimiento || null;
-    this.frecuenciaElegida = recuperados.frecuenciaElegida || '';
   }
 }
 
@@ -93,7 +90,7 @@ export class HomePage implements OnInit {
     this.genero = '';
     this.objetivo = '';
     this.fechaNacimiento = null;
-    this.frecuenciaElegida = '';
+    this.recibirNotificaciones = '';
 
     this.animarInput(this.inputNombre);
     this.animarInput(this.inputApellido);
@@ -125,7 +122,7 @@ export class HomePage implements OnInit {
       !this.fechaNacimiento ||
       !this.genero ||
       !this.objetivo ||
-      !this.frecuenciaElegida
+      !this.recibirNotificaciones
     ) {
       const toast = await this.toastController.create({
         message: 'Por favor, completa todos los campos antes de guardar.',
@@ -146,7 +143,7 @@ export class HomePage implements OnInit {
       fechaNacimiento: this.fechaNacimiento,
       genero: this.genero,
       objetivo: this.objetivo,
-      frecuenciaElegida: this.frecuenciaElegida
+      recibirNotificaciones: this.recibirNotificaciones,
     };
 
     localStorage.setItem('datosUsuario', JSON.stringify(datosActualizados));
