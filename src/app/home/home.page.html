@@ -4,7 +4,7 @@
       W E L L T R A C K
     </ion-title>
     <ion-buttons slot="end">
-<ion-menu-button color="medium"></ion-menu-button>
+      <ion-menu-button color="medium"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,12 +12,20 @@
 
 <ion-content class="ion-padding">
   <ion-card
-    style="border: 2px solid rgb(162, 228, 95); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; margin-top: 50px; margin-bottom: 70px;">
-    <ion-card-content style="text-align: center;">
-      <h1 style="font-family:monospace; color:rgb(143, 143, 143); margin-bottom: 0;"><strong>¡Bienvenido/a!</strong>
-      </h1>
-      <h4 style="font-family:monospace; color:rgb(162, 228, 95); margin-top: 10px;"><strong>Usuario: {{ usuario
-          }}</strong></h4>
+    style="border: 2px solid rgb(162, 228, 95); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; margin-top: 50px; margin-bottom: 70px;">
+    <ion-card-content style="display: flex; align-items: center; gap: 20px;">
+      <div class="photo-container" (click)="takePicture()">
+        <img [src]="imageSource || 'assets/default-avatar.png'" alt="Foto de perfil" />
+        <ion-icon name="camera" class="camera-icon"></ion-icon>
+      </div>
+      <div>
+        <h1 style="font-family: monospace; color: rgb(143, 143, 143); margin-bottom: 0;">
+          <strong>¡Bienvenido/a!</strong>
+        </h1>
+        <h4 style="font-family: monospace; color: rgb(162, 228, 95); margin-top: 10px;">
+          <strong>Usuario: {{ usuario }}</strong>
+        </h4>
+      </div>
     </ion-card-content>
   </ion-card>
 

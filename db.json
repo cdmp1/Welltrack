@@ -1,0 +1,23 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "usuario": "tester",
+            "password": "1234",
+            "nombre": "Camila",
+            "apellidop": "Moreno",
+            "apellidom": "Pino",
+            "email": "tester@mail.com"
+        }
+    ],
+    "userInfo": [
+        {
+            "id": 1,
+            "userId": 1,
+            "genero": "femenino",
+            "objetivo": "controlHabitos",
+            "fechaNacimiento": "1997-09-01",
+            "recibirNotificaciones": true
+        }
+    ]
+}

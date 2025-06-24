@@ -19,6 +19,9 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
+import { HttpClientModule } from '@angular/common/http';
+import { UserListTestComponent } from './user-list-test/user-list-test.component';
+
 
 registerLocaleData(localeEs);
 
@@ -34,7 +37,8 @@ imports: [
   MatSelectModule,
   MatDatepickerModule,
   MatFormFieldModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  HttpClientModule
 ],
   providers: [
   { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -45,4 +49,3 @@ imports: [
   schemas: [CUSTOM_ELEMENTS_SCHEMA] 
 })
 export class AppModule {}
-

@@ -32,6 +32,17 @@ const routes: Routes = [
     path: '**',
     loadChildren: () => import('./page-not-found/page-not-found.module').then( m => m.PageNotFoundPageModule)
   },
+  {
+    path: 'user-list-test',
+    loadChildren: () => import('./user-list-test/user-list-test.module').then(m => m.UserListTestModule)
+  },  {
+    path: 'map',
+    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
+  },
+  {
+    path: 'camera',
+    loadChildren: () => import('./camera/camera.module').then( m => m.CameraPageModule)
+  }
 
 ];
 

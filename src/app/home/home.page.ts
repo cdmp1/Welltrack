@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
+import { UserInfoService } from '../services/user-info.service';
+import { UserInfo } from '../models/user-info.model'; 
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 
 @Component({
@@ -11,11 +14,8 @@ import { AlertController, ToastController } from '@ionic/angular';
 })
 export class HomePage implements OnInit {
 
-  // Datos recibidos del Login
   usuario: string = '';
   password: string = '';
-
-  // Datos del formulario de información
   modoEdicion: boolean = false;
 
   nombre: string = '';
@@ -24,20 +24,21 @@ export class HomePage implements OnInit {
   genero: string = '';
   objetivo: string = '';
   fechaNacimiento: Date | null = null;
-
-  datosGuardados: any = {};
-
   recibirNotificaciones: string = 'si';
 
+  userId!: number;
+  userInfoId?: number;
 
-  // Referencias a los inputs para animación
+  imageSource: string | null = null;
+
   @ViewChild('inputNombre') inputNombre!: ElementRef;
   @ViewChild('inputApellido') inputApellido!: ElementRef;
 
   constructor(
     private router: Router,
     private alertCtrl: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private userInfoService: UserInfoService
   ) {}
 
   ngOnInit() {
@@ -50,37 +51,40 @@ export class HomePage implements OnInit {
       this.nombre = state['nombre'] || '';
       this.apellidoPaterno = state['apellidoPaterno'] || '';
       this.apellidoMaterno = state['apellidoMaterno'] || '';
-    } else {
-      console.warn('No se recibieron datos desde Login');
     }
 
-    const datos = localStorage.getItem('datosUsuario');
-    if (datos) {
-      this.datosGuardados = JSON.parse(datos);
-      this.genero = this.datosGuardados.genero || '';
-      this.objetivo = this.datosGuardados.objetivo || '';
-      this.fechaNacimiento = this.datosGuardados.fechaNacimiento || null;
+    const id = localStorage.getItem('userId');
+    if (id) {
+      this.userId = Number(id);
+
+      this.userInfoService.getUserInfoByUserId(this.userId).subscribe({
+        next: (res: UserInfo[]) => {
+          if (res.length > 0) {
+            const info = res[0];
+            this.userInfoId = info.id;
+            this.genero = info.genero;
+            this.objetivo = info.objetivo;
+            this.fechaNacimiento = new Date(info.fechaNacimiento);
+            this.recibirNotificaciones = info.recibirNotificaciones ? 'si' : 'no';
+          }
+        },
+        error: (err) => console.error('Error al obtener datos desde API', err)
+      });
+    } else {
+      console.warn('No se encontró el ID del usuario');
     }
   }
 
 
   cancelarEdicion() {
-  this.modoEdicion = false;
-  const datos = localStorage.getItem('datosUsuario');
-  if (datos) {
-    const recuperados = JSON.parse(datos);
-    this.nombre = recuperados.nombre || '';
-    this.apellidoPaterno = recuperados.apellidop || '';
-    this.apellidoMaterno = recuperados.apellidom || '';
-    this.genero = recuperados.genero || '';
-    this.objetivo = recuperados.objetivo || '';
-    this.fechaNacimiento = recuperados.fechaNacimiento || null;
+    this.modoEdicion = false;
+    this.ngOnInit();
   }
-}
+
 
   irADailyTracking() {
-  this.router.navigate(['/daily-tracking']);
-}
+    this.router.navigate(['/daily-tracking']);
+  }
 
 
   async limpiarCampos() {
@@ -114,6 +118,7 @@ export class HomePage implements OnInit {
     }, 1000);
   }
 
+
   async guardarDatos() {
     if (
       !this.nombre ||
@@ -134,29 +139,76 @@ export class HomePage implements OnInit {
       return;
     }
 
-    const datosActualizados = {
-      usuario: this.usuario,
-      password: this.password,
-      nombre: this.nombre,
-      apellidop: this.apellidoPaterno,
-      apellidom: this.apellidoMaterno,
-      fechaNacimiento: this.fechaNacimiento,
+    const infoActualizada: UserInfo = {
+      userId: this.userId,
       genero: this.genero,
       objetivo: this.objetivo,
-      recibirNotificaciones: this.recibirNotificaciones,
+      fechaNacimiento: this.fechaNacimiento!,
+      recibirNotificaciones: this.recibirNotificaciones === 'si'
     };
 
-    localStorage.setItem('datosUsuario', JSON.stringify(datosActualizados));
+    if (this.userInfoId !== undefined) {
+      this.userInfoService.updateUserInfo(this.userInfoId, infoActualizada).subscribe({
+        next: async () => {
+          const toast = await this.toastController.create({
+            message: '¡Datos actualizados correctamente!',
+            duration: 2000,
+            color: 'success',
+            position: 'top'
+          });
+          await toast.present();
+        },
+        error: async () => {
+          const toast = await this.toastController.create({
+            message: 'Error al actualizar datos.',
+            duration: 2000,
+            color: 'danger',
+            position: 'top'
+          });
+          await toast.present();
+        }
+      });
+    } else {
+      this.userInfoService.saveUserInfo(infoActualizada).subscribe({
+        next: async (nuevo) => {
+          this.userInfoId = nuevo.id;
+          const toast = await this.toastController.create({
+            message: '¡Datos guardados correctamente!',
+            duration: 2000,
+            color: 'success',
+            position: 'top'
+          });
+          await toast.present();
+        },
+        error: async () => {
+          const toast = await this.toastController.create({
+            message: 'Error al guardar datos.',
+            duration: 2000,
+            color: 'danger',
+            position: 'top'
+          });
+          await toast.present();
+        }
+      });
+    }
+  }
 
-    const toast = await this.toastController.create({
-      message: '¡Datos guardados correctamente!',
-      duration: 2000,
-      color: 'success',
-      position: 'top'
+
+async takePicture() {
+  try {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Prompt 
     });
 
-    await toast.present();
+    this.imageSource = image.dataUrl ?? null;
+  } catch (error) {
+    console.error('No se pudo obtener la imagen', error);
   }
+}
+
 
   async logOut() {
     const alert = await this.alertCtrl.create({
