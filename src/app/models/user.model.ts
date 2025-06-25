@@ -1,5 +1,5 @@
 export interface User {
-    id?: number; // generado automáticamente por json-server*
+    id?: number; 
     usuario: string;
     password: string;
     nombre: string;

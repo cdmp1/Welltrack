@@ -1,5 +1,5 @@
 export interface UserInfo {
-    id?: number; // generado automáticamente por json-server*
+    id?: number; 
     userId: number;
     genero: string;
     objetivo: string;

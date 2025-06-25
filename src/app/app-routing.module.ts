@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard'; 
 
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
   {
     path: '',
     redirectTo: 'login',
@@ -21,29 +18,32 @@ const routes: Routes = [
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   },
   {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
+    canActivate: [authGuard]
+  },
+  {
     path: 'daily-tracking',
-    loadChildren: () => import('./daily-tracking/daily-tracking.module').then( m => m.DailyTrackingPageModule)
+    loadChildren: () => import('./daily-tracking/daily-tracking.module').then( m => m.DailyTrackingPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'statistics',
-    loadChildren: () => import('./statistics/statistics.module').then( m => m.StatisticsPageModule)
-  },
-  {
-    path: '**',
-    loadChildren: () => import('./page-not-found/page-not-found.module').then( m => m.PageNotFoundPageModule)
+    loadChildren: () => import('./statistics/statistics.module').then( m => m.StatisticsPageModule),
+    canActivate: [authGuard]
   },
   {
     path: 'user-list-test',
     loadChildren: () => import('./user-list-test/user-list-test.module').then(m => m.UserListTestModule)
-  },  {
-    path: 'map',
-    loadChildren: () => import('./map/map.module').then( m => m.MapPageModule)
   },
   {
     path: 'camera',
     loadChildren: () => import('./camera/camera.module').then( m => m.CameraPageModule)
+  },
+  {
+    path: '**',
+    loadChildren: () => import('./page-not-found/page-not-found.module').then( m => m.PageNotFoundPageModule)
   }
-
 ];
 
 @NgModule({
@@ -53,3 +53,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
