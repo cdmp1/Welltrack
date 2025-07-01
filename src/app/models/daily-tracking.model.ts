@@ -1,7 +1,7 @@
 export interface DailyTracking {
     id?: number;  
     userId: number;
-    fecha: string;  
+    fecha: string; // 'YYYY-MM-DD'
     sueno: string;
     horasSueno: number;
     animo: string;

@@ -1,16 +1,18 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
-      W E L L T R A C K 
-    </ion-title>
-<ion-buttons slot="end">
-<ion-menu-button color="medium"></ion-menu-button>
-</ion-buttons>
-  </ion-toolbar>
+  <div style="padding-top: env(safe-area-inset-top);">
+    <ion-toolbar>
+      <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+        W E L L T R A C K
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button color="medium"></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </div>
 </ion-header>
 
 
-<ion-content class="ion-padding">
+<ion-content fullscreen="true" class="ion-padding">
   <div style="margin-top: 50px; margin-bottom: 50px;">
     <h2 style="font-family:monospace; text-align: center;">SEGUIMIENTO DEL DÍA</h2>
   </div>
@@ -21,7 +23,8 @@
       </ion-datetime>
     </div>
 
-    <p style="text-align: center; margin-bottom: 50px;"><strong>Fecha seleccionada:</strong> {{ fecha | date:'fullDate'
+    <p style="text-align: center; margin-bottom: 50px; font-family: monospace;"><strong>Fecha:</strong> {{ fecha |
+      date:'fullDate'
       }}</p>
 
 
@@ -53,12 +56,12 @@
     </ion-item>
 
 
-<ion-item>
-  <ion-label>¿Cuántas horas dormiste?</ion-label>
-  <ion-select [(ngModel)]="horasSueno" interface="popover" slot="end">
-    <ion-select-option *ngFor="let hora of horasArray" [value]="hora">{{ hora }}</ion-select-option>
-  </ion-select>
-</ion-item>
+    <ion-item>
+      <ion-label>¿Cuántas horas dormiste?</ion-label>
+      <ion-select [(ngModel)]="horasSueno" interface="popover" slot="end">
+        <ion-select-option *ngFor="let hora of horasArray" [value]="hora">{{ hora }}</ion-select-option>
+      </ion-select>
+    </ion-item>
 
 
     <ion-item>
@@ -74,10 +77,21 @@
     </ion-item>
 
 
-    <ion-button expand="block" (click)="guardarSeguimiento()" [disabled]="!formularioValido()">
+    <ion-button expand="block" style='font-family: monospace; font-weight: bold;' (click)="guardarSeguimiento()"
+      [disabled]="!formularioValido()">
       Guardar Seguimiento
     </ion-button>
   </div>
+
+  <ion-button expand="block" fill="outline" style="
+    --border-color: rgb(162, 228, 95);
+    --color: rgb(143, 143, 143);
+    margin-top: 20px;
+    font-weight: bold;
+    font-family: monospace;
+  " (click)="irAStatistics()">
+    Ver Resumen de Bienestar
+  </ion-button>
 
 
   <div class="footer" style="margin-top: 80px;">App desarrollada por CMP</div>

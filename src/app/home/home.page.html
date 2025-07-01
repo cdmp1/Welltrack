@@ -1,114 +1,126 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
-      W E L L T R A C K
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-menu-button color="medium"></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
+  <div style="padding-top: env(safe-area-inset-top);">
+    <ion-toolbar>
+      <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+        W E L L T R A C K
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-menu-button color="medium"></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </div>
 </ion-header>
 
 
-<ion-content class="ion-padding">
+<ion-content fullscreen="true" class="ion-padding">
   <ion-card
     style="border: 2px solid rgb(162, 228, 95); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; margin-top: 50px; margin-bottom: 70px;">
-    <ion-card-content style="display: flex; align-items: center; gap: 20px;">
-      <div class="photo-container" (click)="takePicture()">
-        <img [src]="imageSource || 'assets/default-avatar.png'" alt="Foto de perfil" />
-        <ion-icon name="camera" class="camera-icon"></ion-icon>
+    <ion-card-content style="display: flex; flex-direction: column; align-items: center;">
+
+      <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 16px;">
+        <div style="position: relative; cursor: pointer; width: 100px; height: 100px;" (click)="seleccionarFoto()">
+          <img [src]="imageSource || 'assets/profile.png'" alt="Foto de perfil"
+            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid rgb(162, 228, 95);" />
+
+          <ion-button fill="clear" size="small" (click)="tomarFoto(); $event.stopPropagation()"
+            style="position: absolute; bottom: -6px; left: -10px; z-index: 10;">
+            <ion-icon slot="icon-only" name="camera-outline" style="color: #ffffff;"></ion-icon>
+          </ion-button>
+
+          <!-- Icono galería (esquina inferior derecha) -->
+          <ion-button fill="clear" size="small" (click)="seleccionarFoto(); $event.stopPropagation()"
+            style="position: absolute; bottom: -6px; right: -10px; z-index: 10;">
+            <ion-icon slot="icon-only" name="image-outline" style="color: #ffffff;"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div>
+          <h2 style="margin: 0; font-family: monospace; color: rgb(143, 143, 143);">
+            ¡Hola, qué gusto verte aquí, <span *ngIf="user" style="color: rgb(162, 228, 95);">{{ user.username
+              }}</span>! :]
+          </h2>
+        </div>
       </div>
-      <div>
-        <h1 style="font-family: monospace; color: rgb(143, 143, 143); margin-bottom: 0;">
-          <strong>¡Bienvenido/a!</strong>
-        </h1>
-        <h4 style="font-family: monospace; color: rgb(162, 228, 95); margin-top: 10px;">
-          <strong>Usuario: {{ usuario }}</strong>
-        </h4>
-      </div>
+
     </ion-card-content>
   </ion-card>
+
 
   <h2 style="font-family:monospace; text-align: center;">TU INFORMACIÓN</h2>
 
   <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Nombre</mat-label>
-      <input matInput [(ngModel)]="nombre" [disabled]="!modoEdicion" />
-    </mat-form-field>
+    <form (ngSubmit)="guardarDatos()">
 
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="nombre" name="nombre" [disabled]="!modoEdicion" />
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Apellido Paterno</mat-label>
-      <input matInput [(ngModel)]="apellidoPaterno" [disabled]="!modoEdicion" />
-    </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Apellido</mat-label>
+        <input matInput [(ngModel)]="apellido" name="apellido" [disabled]="!modoEdicion" />
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Apellido Materno</mat-label>
-      <input matInput [(ngModel)]="apellidoMaterno" [disabled]="!modoEdicion" />
-    </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Fecha Nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="userInfo.fechaNacimiento" name="fechaNacimiento" readonly
+          [disabled]="!modoEdicion" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Fecha Nacimiento</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="fechaNacimiento" readonly [disabled]="!modoEdicion" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Género</mat-label>
+        <mat-select [(ngModel)]="userInfo.genero" name="genero" [disabled]="!modoEdicion">
+          <mat-option value="masculino">Masculino</mat-option>
+          <mat-option value="femenino">Femenino</mat-option>
+          <mat-option value="noBinario">No binario</mat-option>
+          <mat-option value="otro">Otro</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Género</mat-label>
-      <mat-select [(ngModel)]="genero" [disabled]="!modoEdicion">
-        <mat-option value="masculino">Masculino</mat-option>
-        <mat-option value="femenino">Femenino</mat-option>
-        <mat-option value="noBinario">No binario</mat-option>
-        <mat-option value="otro">Otro</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Objetivo Principal</mat-label>
+        <mat-select [(ngModel)]="userInfo.objetivo" name="objetivo" [disabled]="!modoEdicion">
+          <mat-option value="DormirMejor">Dormir mejor</mat-option>
+          <mat-option value="MasDeporte">Ejercitarme más</mat-option>
+          <mat-option value="ReducirEstres">Reducir estrés</mat-option>
+          <mat-option value="ControlHabitos">Llevar el control de hábitos</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width: 100%;">
-      <mat-label>Objetivo Principal</mat-label>
-      <mat-select [(ngModel)]="objetivo" [disabled]="!modoEdicion">
-        <mat-option value="DormirMejor">Dormir mejor</mat-option>
-        <mat-option value="MasDeporte">Ejercitarme más</mat-option>
-        <mat-option value="ReducirEstres">Reducir estrés</mat-option>
-        <mat-option value="ControlHabitos">Llevar el control de hábitos</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-label>¿Deseas recibir notificaciones de recordatorios?</mat-label>
+      <mat-radio-group [(ngModel)]="userInfo.recibirNotificaciones" name="recibirNotificaciones"
+        [disabled]="!modoEdicion">
+        <mat-radio-button [value]="true">Sí</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
 
+      <div *ngIf="!modoEdicion" style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+        <ion-button color="primary" (click)="modoEdicion = true">Editar Información</ion-button>
+      </div>
 
-    <mat-label>¿Deseas recibir notificaciones de recordatorios?</mat-label>
-    <mat-radio-group [(ngModel)]="recibirNotificaciones" [disabled]="!modoEdicion">
-      <mat-radio-button value="si">Sí</mat-radio-button>
-      <mat-radio-button value="no">No</mat-radio-button>
-    </mat-radio-group>
+      <div *ngIf="modoEdicion" style="display: flex; gap: 20px; margin-top: 10px; margin-bottom: 30px;">
+        <ion-button expand="block" color="medium" (click)="cancelarEdicion()" style="flex: 1;">Cancelar</ion-button>
+        <ion-button expand="block" color="medium" (click)="limpiarCampos()" style="flex: 1;">Limpiar</ion-button>
+        <ion-button type="submit" expand="block" color="primary" style="flex: 1;">Guardar</ion-button>
+      </div>
 
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
-      <ion-button *ngIf="!modoEdicion" color="primary" (click)="modoEdicion = true">
-        Editar Información
-      </ion-button>
-    </div>
-
-    <div *ngIf="modoEdicion" style="display: flex; gap: 50px; margin-top: 10px; margin-bottom: 30px;">
-      <ion-button expand="block" color="medium" (click)="limpiarCampos()" style="flex: 1;">Limpiar</ion-button>
-      <ion-button expand="block" color="primary" (click)="guardarDatos(); modoEdicion = false"
-        style="flex: 1;">Guardar</ion-button>
-    </div>
-
+    </form>
 
     <div style="display: flex; justify-content: center; margin: 30px 0;">
       <ion-button expand="block" size="large" fill="outline" style="
-      --border-radius: 12px;
-      --padding-start: 40px;
-      --padding-end: 40px;
-      font-weight: bold;
-      --border-color: rgb(162, 228, 95);
-      --color: rgb(143, 143, 143);
-      font-family: monospace;
-    " (click)="irADailyTracking()">
+        --border-radius: 12px;
+        --padding-start: 20px;
+        --padding-end: 20px;
+        font-weight: bold;
+        --border-color: rgb(162, 228, 95);
+        --color: rgb(143, 143, 143);
+        font-family: monospace;
+      " (click)="irADailyTracking()">
         Iniciar Seguimiento ✔️
       </ion-button>
     </div>
-
   </div>
 
 

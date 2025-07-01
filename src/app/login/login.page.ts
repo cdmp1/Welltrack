@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { UserService } from '../services/user.service';
-import { User } from '../models/user.model';
-import { Storage } from '@ionic/storage-angular';
-
+import { StorageService } from '../services/storage.service';
 import { NetworkService } from '../services/network.service';
-import { DbTaskService } from '../services/db-task.service';
-import { SyncService } from '../services/sync.service';
+import { User } from '../models/user.model';
+import { finalize } from 'rxjs/operators';
+import { Preferences } from '@capacitor/preferences';
 
 
 @Component({
@@ -17,120 +16,129 @@ import { SyncService } from '../services/sync.service';
   standalone: false,
 })
 export class LoginPage implements OnInit {
-  
-  usuario: string = '';
+
+  username: string = '';
   password: string = '';
-  loginError: boolean = false;
+  isLoading = false;
 
   constructor(
     private router: Router,
     private loadingController: LoadingController,
+    private toastController: ToastController,
     private userService: UserService,
-    private storage: Storage,
-    private networkService: NetworkService,
-    private dbTaskService: DbTaskService,
-    private syncService: SyncService
-  ) {}
+    private storageService: StorageService,
+    private networkService: NetworkService
+  ) { }
 
   async ngOnInit() {
-    await this.storage.create();
-    const online = await this.networkService.isOnline();
-    if (online) {
-      await this.syncService.syncPendingData();
+    const usuarioGuardado = await this.storageService.get<User>('user');
+    if (usuarioGuardado && usuarioGuardado.id !== undefined) {
+      await Preferences.set({ key: 'userId', value: usuarioGuardado.id.toString() });
+      this.router.navigateByUrl('/home', { replaceUrl: true });
+    } else {
+      await this.storageService.remove('user');
+      this.router.navigateByUrl('/login', { replaceUrl: true });
     }
   }
 
-  async login() {
-    const usuarioValido = /^[a-zA-Z0-9]{3,8}$/.test(this.usuario);
+  formularioValido(): boolean {
+    const usernameValido = /^[a-zA-Z0-9]{3,8}$/.test(this.username);
     const passwordValido = /^[0-9]{4}$/.test(this.password);
+    return usernameValido && passwordValido;
+  }
 
-    if (!usuarioValido || !passwordValido) {
-      this.loginError = true;
-      return;
+  async doLogin() {
+    const usernameLimpio = this.username.trim();
+    const passwordLimpio = this.password.trim();
+
+    const usernameValido = /^[a-zA-Z0-9]{3,8}$/.test(usernameLimpio);
+    const passwordValido = /^[0-9]{4}$/.test(passwordLimpio);
+
+    if (!usernameValido || !passwordValido) {
+      return this.mostrarToast('Usuario o contraseña inválidos.', 'danger');
     }
+
+    this.isLoading = true;
+    const loading = await this.loadingController.create({ message: 'Iniciando sesión...' });
+    await loading.present();
 
     const online = await this.networkService.isOnline();
 
     if (online) {
-      this.userService.login(this.usuario, this.password).subscribe(
-        async (res: User[]) => {
-          if (res.length > 0) {
-            const datos: User = res[0];
-            this.loginError = false;
+      this.userService.login(usernameLimpio).pipe(
+        finalize(() => {
+          this.isLoading = false;
+          loading.dismiss();
+        })
+      ).subscribe(
+        async (res) => {
+          if (!res) {
+            this.mostrarToast('No se recibió respuesta del servidor.', 'danger');
+            return;
+          }
 
-            const yaExiste = await this.dbTaskService.getUserById(datos.id!);
-            if (!yaExiste) {
-              await this.dbTaskService.saveUserOffline(datos);
+          console.log('Respuesta de login:', res);
+          const user = res.find(u => u.password === passwordLimpio);
+          if (user && user.id !== undefined) {
+            if (user.estado === 'bloqueado') {
+              this.mostrarToast('Tu cuenta está bloqueada. Contacta con soporte.', 'danger');
+              this.username = '';
+              this.password = '';
+              return;
             }
 
-            const loading = await this.loadingController.create({
-              message: 'Iniciando sesión...',
-              duration: 1000,
-            });
-            await loading.present();
+            await this.storageService.set('user', user);
+            await Preferences.set({ key: 'userId', value: user.id.toString() });
 
-            await this.storage.set('userId', datos.id);
-
-            await loading.dismiss();
-            this.router.navigate(['/home'], {
-              state: {
-                usuario: datos.usuario,
-                password: datos.password,
-                nombre: datos.nombre,
-                apellidoPaterno: datos.apellidop,
-                apellidoMaterno: datos.apellidom,
-              }
-            });
+            if (user.rol === 'admin') {
+              this.router.navigateByUrl('/admin-users', { replaceUrl: true });
+            } else {
+              this.router.navigateByUrl('/home', { replaceUrl: true });
+            }
           } else {
-            this.loginError = true;
+            this.mostrarToast('Credenciales incorrectas.', 'danger');
+            this.password = '';
           }
         },
-        async (error) => {
-          console.error('Error en login API', error);
-          this.loginError = true;
-
-          const toast = document.createElement('ion-toast');
-          toast.message = 'Error al conectar con el servidor.';
-          toast.duration = 2500;
-          toast.color = 'danger';
-          toast.position = 'top';
-          document.body.appendChild(toast);
-          await toast.present();
+        (error) => {
+          console.error('Error login:', error);
+          this.mostrarToast('Error al conectar con el servidor.', 'danger');
         }
       );
     } else {
-      // OFFLINE
-      const userOffline = await this.dbTaskService.getUserByCredenciales(this.usuario, this.password);
+      // Modo offline
+      const user = await this.storageService.get<User>('user');
+      loading.dismiss();
+      this.isLoading = false;
 
-      if (userOffline) {
-        this.loginError = false;
-
-        const loading = await this.loadingController.create({
-          message: 'Iniciando sesión offline...',
-          duration: 1000,
-        });
-        await loading.present();
-
-        await this.storage.set('userId', userOffline.id);
-
-        await loading.dismiss();
-        this.router.navigate(['/home'], {
-          state: {
-            usuario: userOffline.usuario,
-            password: userOffline.password,
-            nombre: userOffline.nombre,
-            apellidoPaterno: userOffline.apellidop,
-            apellidoMaterno: userOffline.apellidom
-          }
-        });
+      if (user && user.username === usernameLimpio && user.password === passwordLimpio && user.id !== undefined) {
+        if (user.estado === 'bloqueado') {
+          this.mostrarToast('Tu cuenta está bloqueada. Contacta con soporte.', 'danger');
+          this.username = '';
+          this.password = '';
+          return;
+        }
+        this.mostrarToast(`Bienvenido de nuevo, ${user.nombre}`, 'success');
+        await Preferences.set({ key: 'userId', value: user.id.toString() });
+        this.router.navigateByUrl('/home', { replaceUrl: true });
       } else {
-        this.loginError = true;
+        this.mostrarToast('Primero inicia sesión con conexión para usar la app sin internet.', 'warning');
       }
     }
   }
 
   goToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  async mostrarToast(mensaje: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'top',
+      color
+    });
+    await toast.present();
   }
 
 }

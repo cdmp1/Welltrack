@@ -1,7 +1,12 @@
 <ion-content [fullscreen]="true">
 
-  <h1 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; color:rgb(162, 228, 95);">W E L L T R A C K</h1>
-  <p style="font-family:monospace; text-align: center; margin-bottom: 100px; color:rgb(143, 143, 143);">Rutina consciente</p>
+  <div style="padding-top: env(safe-area-inset-top);">
+    <h1
+      style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; color:rgb(162, 228, 95);">
+      W E L L T R A C K</h1>
+    <p style="font-family:monospace; text-align: center; margin-bottom: 100px; color:rgb(143, 143, 143);">Rutina
+      consciente</p>
+  </div>
 
   <h3 style="text-align: center; margin-bottom: 15px;">¡Regístrate!</h3>
 
@@ -10,19 +15,19 @@
 
       <mat-form-field appearance="fill" style="width: 100%;">
         <mat-label>Usuario</mat-label>
-        <input matInput formControlName="usuario" />
+        <input matInput formControlName="username" />
         <mat-error
-          *ngIf="registerForm.get('usuario')?.invalid && (registerForm.get('usuario')?.touched || registerForm.get('usuario')?.dirty)">
-          <ng-container *ngIf="registerForm.get('usuario')?.hasError('required')">
+          *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.touched || registerForm.get('username')?.dirty)">
+          <ng-container *ngIf="registerForm.get('username')?.hasError('required')">
             El usuario es obligatorio
           </ng-container>
-          <ng-container *ngIf="registerForm.get('usuario')?.hasError('minlength')">
+          <ng-container *ngIf="registerForm.get('username')?.hasError('minlength')">
             Debe tener al menos 3 caracteres
           </ng-container>
-          <ng-container *ngIf="registerForm.get('usuario')?.hasError('maxlength')">
+          <ng-container *ngIf="registerForm.get('username')?.hasError('maxlength')">
             Debe tener máximo 8 caracteres
           </ng-container>
-          <ng-container *ngIf="registerForm.get('usuario')?.hasError('pattern')">
+          <ng-container *ngIf="registerForm.get('username')?.hasError('pattern')">
             Solo se permiten letras y números (sin espacios)
           </ng-container>
         </mat-error>
@@ -43,28 +48,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Apellido Paterno</mat-label>
-        <input matInput formControlName="apellidoPaterno" />
+        <mat-label>Apellido </mat-label>
+        <input matInput formControlName="apellido" />
         <mat-error
-          *ngIf="registerForm.get('apellidoPaterno')?.invalid && (registerForm.get('apellidoPaterno')?.touched || registerForm.get('apellidoPaterno')?.dirty)">
-          <ng-container *ngIf="registerForm.get('apellidoPaterno')?.hasError('required')">
-            El apellido paterno es obligatorio
+          *ngIf="registerForm.get('apellido')?.invalid && (registerForm.get('apellido')?.touched || registerForm.get('apellido')?.dirty)">
+          <ng-container *ngIf="registerForm.get('apellido')?.hasError('required')">
+            El apellido es obligatorio
           </ng-container>
-          <ng-container *ngIf="registerForm.get('apellidoPaterno')?.hasError('pattern')">
-            Solo se permiten letras y espacios
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Apellido Materno</mat-label>
-        <input matInput formControlName="apellidoMaterno" />
-        <mat-error
-          *ngIf="registerForm.get('apellidoMaterno')?.invalid && (registerForm.get('apellidoMaterno')?.touched || registerForm.get('apellidoMaterno')?.dirty)">
-          <ng-container *ngIf="registerForm.get('apellidoMaterno')?.hasError('required')">
-            El apellido materno es obligatorio
-          </ng-container>
-          <ng-container *ngIf="registerForm.get('apellidoMaterno')?.hasError('pattern')">
+          <ng-container *ngIf="registerForm.get('apellido')?.hasError('pattern')">
             Solo se permiten letras y espacios
           </ng-container>
         </mat-error>
@@ -110,9 +101,9 @@
       </ion-button>
     </form>
 
-      <ion-text style="display: block; text-align: center; margin-bottom: 80px;">
-        <ion-button fill="clear" (click)="goToLogin()">Iniciar sesión</ion-button>
-      </ion-text>
+    <ion-text style="display: block; text-align: center; margin-bottom: 80px;">
+      <ion-button fill="clear" (click)="goToLogin()">Iniciar sesión</ion-button>
+    </ion-text>
 
   </div>
 </ion-content>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DbTaskService } from './db-task.service';
-import { UserService } from './user.service';
 import { UserInfoService } from './user-info.service';
 import { DailyTrackingService } from './daily-tracking.service';
+import { ToastController } from '@ionic/angular';
 
 
 @Injectable({
@@ -12,74 +12,95 @@ export class SyncService {
 
   constructor(
     private dbTask: DbTaskService,
-    private userService: UserService,
     private userInfoService: UserInfoService,
-    private dailyTrackingService: DailyTrackingService
-  ) {}
+    private dailyTrackingService: DailyTrackingService,
+    private toastController: ToastController
+  ) { }
 
   async syncPendingData(): Promise<void> {
     try {
-      // 1. Sincronizar usuarios pendientes
-      const pendingUsers = await this.dbTask.getPendingUsers();
-
-      for (const user of pendingUsers) {
-        try {
-          await new Promise<void>((resolve, reject) => {
-            this.userService.register(user).subscribe({
-              next: async (createdUser) => {
-                if (createdUser?.id) {
-                  const tempId = user.id!;
-                  
-                  await this.dbTask.updateUserId(tempId, createdUser.id);
-                  await this.dbTask.updateUserInfoUserId(tempId, createdUser.id);
-                }
-                resolve();
-              },
-              error: reject
-            });
-          });
-        } catch (err) {
-          console.error('Error al sincronizar usuario:', user.usuario, err);
-        }
-      }
-
-      // 2. Sincronizar información adicional pendiente
       const pendingInfo = await this.dbTask.getPendingUserInfo();
-
-      for (const info of pendingInfo) {
-        try {
-          await new Promise<void>((resolve, reject) => {
-            this.userInfoService.saveUserInfo(info).subscribe({
-              next: async (savedInfo) => {
-                if (info.id) {
-                  await this.dbTask.markUserInfoAsSynced(info.id);
-                }
-                resolve();
-              },
-              error: reject
-            });
-          });
-        } catch (err) {
-          console.error('Error al sincronizar userInfo de userId', info.userId, err);
-        }
-      }
-
-      // 3. Sincronizar seguimientos diarios pendientes
       const pendingTracking = await this.dbTask.getPendingDailyTracking();
 
+      let infoSincronizado = false;
+      let trackingSincronizado = false;
+
+      // 1. Sincronizar UserInfo
+      for (const info of pendingInfo) {
+        try {
+          const existing = await new Promise<any[]>((resolve, reject) => {
+            this.userInfoService.getUserInfoByUserId(info.userId).subscribe({
+              next: resolve,
+              error: reject
+            });
+          });
+
+          const request$ = existing.length
+            ? this.userInfoService.updateUserInfo(existing[0].id, info)
+            : this.userInfoService.saveUserInfo(info);
+
+          await new Promise<void>((resolve, reject) => {
+            request$.subscribe({
+              next: async () => {
+                if (info.id) {
+                  await this.dbTask.markUserInfoAsSynced(Number(info.id));
+                }
+                infoSincronizado = true;
+                resolve();
+              },
+              error: reject
+            });
+          });
+
+        } catch (err) {
+          console.error('Error al sincronizar userInfo:', err);
+        }
+      }
+
+      if (infoSincronizado) {
+        await this.dbTask.clearSyncedUserInfo();
+      }
+
+
+      // 2. Sincronizar Seguimiento Diario
       for (const record of pendingTracking) {
         try {
           await this.dailyTrackingService.saveRecordOnline(record);
-          await this.dbTask.markDailyTrackingAsSynced(record.id!);
-        } catch (err: any) {
-          console.error('Error al guardar seguimiento diario de userId:', record.userId, err);
+          await this.dbTask.markDailyTrackingAsSynced(Number(record.id));
+          trackingSincronizado = true;
+        } catch (err) {
+          console.error('Error al sincronizar seguimiento diario:', err);
         }
+      }
+
+      if (trackingSincronizado) {
+        await this.dbTask.clearSyncedDailyTracking();
+      }
+
+
+      // 3. Mostrar resultado visual
+      if (infoSincronizado || trackingSincronizado) {
+        await this.showToast('Datos sincronizados correctamente');
+      } else {
+        await this.showToast('No hay datos pendientes por sincronizar', 'medium');
       }
 
       console.log('Sincronización completada');
 
     } catch (e) {
       console.error('Error general en sincronización:', e);
+      await this.showToast('Error al sincronizar datos', 'danger');
     }
   }
+
+  private async showToast(message: string, color: 'success' | 'danger' | 'medium' = 'success') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      position: 'top',
+      color
+    });
+    await toast.present();
+  }
+
 }

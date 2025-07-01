@@ -1,5 +1,5 @@
 export interface UserInfo {
-    id?: number; 
+    id?: number;
     userId: number;
     genero: string;
     objetivo: string;

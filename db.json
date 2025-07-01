@@ -1,23 +1,68 @@
 {
-    "users": [
-        {
-            "id": 1,
-            "usuario": "tester",
-            "password": "1234",
-            "nombre": "Camila",
-            "apellidop": "Moreno",
-            "apellidom": "Pino",
-            "email": "tester@mail.com"
-        }
-    ],
-    "userInfo": [
-        {
-            "id": 1,
-            "userId": 1,
-            "genero": "femenino",
-            "objetivo": "controlHabitos",
-            "fechaNacimiento": "1997-09-01",
-            "recibirNotificaciones": true
-        }
-    ]
+  "users": [
+    {
+      "id": "1",
+      "username": "tester",
+      "password": "1234",
+      "nombre": "Tester",
+      "apellido": "Activo",
+      "email": "tester@mail.com",
+      "rol": "user",
+      "estado": "activo"
+    },
+    {
+      "id": "2",
+      "username": "tbloq",
+      "password": "0000",
+      "nombre": "Tester",
+      "apellido": "Bloqueado",
+      "email": "testerbloq@mail.com",
+      "rol": "user",
+      "estado": "bloqueado"
+    },
+    {
+      "id": "3",
+      "username": "admin",
+      "password": "7777",
+      "nombre": "Admin",
+      "apellido": "User",
+      "email": "admin@mail.com",
+      "rol": "admin",
+      "estado": "activo"
+    }
+  ],
+  "userInfo": [
+    {
+      "userId": 1,
+      "genero": "femenino",
+      "objetivo": "ControlHabitos",
+      "fechaNacimiento": "1997-09-01T04:00:00.000Z",
+      "recibirNotificaciones": true,
+      "id": "1"
+    }
+  ],
+  "dailyTracking": [
+    {
+      "userId": "1",
+      "fecha": "2025-06-30",
+      "sueno": "regular",
+      "horasSueno": 5,
+      "animo": "tranquilo",
+      "ejercicio": false,
+      "notas": "Probando",
+      "sincronizado": true,
+      "id": "89e1"
+    },
+    {
+      "userId": 1,
+      "fecha": "2025-06-29",
+      "sueno": "excelente",
+      "horasSueno": 9,
+      "animo": "feliz",
+      "ejercicio": true,
+      "notas": "Fue un buen día!",
+      "sincronizado": true,
+      "id": "4270"
+    }
+  ]
 }

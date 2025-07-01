@@ -1,0 +1,97 @@
+<ion-header [translucent]="true">
+  <div style="padding-top: env(safe-area-inset-top);">
+    <ion-toolbar>
+      <ion-title style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:rgb(162, 228, 95)">
+        W E L L T R A C K
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="logout()" fill="clear" color="medium" size="large">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<ion-content fullscreen="true" class="ion-padding">
+  <div style="margin-top: 50px; margin-bottom: 70px;">
+    <h2 style="font-family: monospace; text-align: center;">ADMINISTRACIÓN DE USUARIOS</h2>
+  </div>
+
+  <ion-card style="margin: 16px;">
+    <ion-card-header>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <ion-card-title style="margin: 0;">USUARIOS REGISTRADOS</ion-card-title>
+        <ion-button fill="clear" size="small" (click)="toggleAgregarUsuario()">
+          <ion-icon name="add-circle-outline" size="large"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list *ngIf="users.length > 0">
+        <ion-item *ngFor="let user of users">
+          <ion-label>
+            <h3>{{ user.username }}</h3>
+            <p>{{ user.nombre }} {{ user.apellido }}</p>
+            <p>{{ user.email }}</p>
+          </ion-label>
+
+          <ion-select [value]="user.estado" (ionChange)="cambiarEstado(user.id!, $event.detail.value)"
+            interface="popover" style="min-width: 150px; margin-right: 20px;">
+            <ion-select-option value="activo">Activo</ion-select-option>
+            <ion-select-option value="bloqueado">Bloqueado</ion-select-option>
+          </ion-select>
+
+          <ion-button fill="clear" color="danger" slot="end" (click)="deleteUser(user.id!)" [disabled]="isLoading">
+            <ion-icon name="trash-outline" size="medium"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-text *ngIf="users.length === 0" style="display: block; text-align: center; margin-top: 20px;">
+        No hay usuarios registrados.
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="mostrarFormulario" style="margin: 20px;">
+    <ion-card-header>
+      <ion-card-title>AGREGAR NUEVO USUARIO</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Usuario</ion-label>
+        <ion-input [(ngModel)]="newUser.username" autocomplete="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="newUser.nombre" autocomplete="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Apellido</ion-label>
+        <ion-input [(ngModel)]="newUser.apellido" autocomplete="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" [(ngModel)]="newUser.email" autocomplete="off"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="newUser.password"></ion-input>
+      </ion-item>
+
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+        <ion-button fill="clear" size="small" (click)="addUser()" [disabled]="isLoading" title="Agregar">
+          <ion-icon name="add-circle-outline" size="large"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="footer" style="margin-top: 80px; text-align: center;">App desarrollada por CMP</div>
+</ion-content>

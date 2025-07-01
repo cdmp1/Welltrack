@@ -1,47 +1,47 @@
 <ion-content [fullscreen]="true">
 
-  <h1 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; color:rgb(162, 228, 95);">W E L L T R A C K</h1>
-  <p style="font-family:monospace; text-align: center; margin-bottom: 100px; color:rgb(143, 143, 143);">Rutina consciente</p>
+  <div style="padding-top: env(safe-area-inset-top);">
+    <h1
+      style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 50px; color:rgb(162, 228, 95);">
+      W E L L T R A C K
+    </h1>
+    <p style="font-family: monospace; text-align: center; margin-bottom: 100px; color:rgb(143, 143, 143);">
+      Rutina consciente
+    </p>
+  </div>
 
   <h3 style="text-align: center; margin-bottom: 15px;">¡Bienvenido/a!</h3>
 
   <div style="max-width: 400px; margin: 0 auto;">
-    <form (ngSubmit)="login()">
+    <form (ngSubmit)="doLogin()" novalidate>
       <ion-item>
         <ion-label position="floating">Usuario</ion-label>
-        <ion-input type="text" [(ngModel)]="usuario" name="usuario" required minlength="3" maxlength="8"
-          pattern="[a-zA-Z0-9]*"></ion-input>
+        <ion-input type="text" [(ngModel)]="username" name="username" required minlength="3" maxlength="8"
+          pattern="[a-zA-Z0-9]*">
+        </ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" [(ngModel)]="password" name="password" required minlength="4" maxlength="4"
-          pattern="\\d*"></ion-input>
+          pattern="\\d*">
+        </ion-input>
       </ion-item>
 
-      <ion-button style="margin-top: 15px;" expand="block" type="submit">Ingresar</ion-button>
-
-      <ion-text *ngIf="loginError" color="danger" style="display: block; text-align: center; margin-top: 10px;">
-        Usuario o contraseña incorrectos
-      </ion-text>
-
+      <ion-button type="submit" expand="block" [disabled]="isLoading || !formularioValido()" style="margin-top: 20px;">
+        Iniciar Sesión
+      </ion-button>
     </form>
 
+    <ion-button fill="clear" expand="block" (click)="goToRegister()" style="margin-top: 10px;">
+      Crea tu cuenta gratis
+    </ion-button>
 
-    <ion-text style="display: block; text-align: center; margin-top: 15px;">
-      <ion-button fill="clear" (click)="goToRegister()">Crea tu cuenta gratis</ion-button>
-    </ion-text>
-
-<div style="display: flex; justify-content: center; margin-top: 30px;">
-  <lottie-player 
-    src="../assets/loginAnimation.json" 
-    background="transparent" 
-    speed="1" 
-    loop 
-    autoplay 
-    style="width: 200px; height: 200px;">
-  </lottie-player>
-</div>
+    <div style="display: flex; justify-content: center; margin-top: 30px;">
+      <lottie-player src="../assets/loginAnimation.json" background="transparent" speed="1" loop autoplay
+        style="width: 200px; height: 200px;">
+      </lottie-player>
+    </div>
   </div>
 
 </ion-content>

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { DailyTrackingService } from '../services/daily-tracking.service';
 import { DailyTracking } from '../models/daily-tracking.model';
-import { Storage } from '@ionic/storage-angular';
+import { StorageService } from '../services/storage.service';
 
 
 @Component({
@@ -20,17 +20,23 @@ export class StatisticsPage implements OnInit {
   totalDias: number = 0;
   fraseMotivacional: string = '';
   userId!: number;
+  ultimaFechaRegistrada: Date | null = null;
 
   constructor(
     private router: Router,
     private alertCtrl: AlertController,
     private dailyTrackingService: DailyTrackingService,
-    private storage: Storage
-  ) {}
+    private storageService: StorageService
+  ) { }
 
   async ngOnInit() {
-    await this.storage.create();
-    this.userId = await this.storage.get('userId');
+    const storedUserId = await this.storageService.get<number>('userId');
+    if (!storedUserId) {
+      console.warn('No se encontró userId en storage, redirigiendo a login');
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.userId = storedUserId;
   }
 
   async ionViewWillEnter() {
@@ -61,6 +67,14 @@ export class StatisticsPage implements OnInit {
       if (data.ejercicio) {
         ejercicioContador++;
       }
+
+      if (registros.length > 0) {
+        const fechas = registros.map(r => new Date(r.fecha)).sort((a, b) => b.getTime() - a.getTime());
+        this.ultimaFechaRegistrada = fechas[0];
+      } else {
+        this.ultimaFechaRegistrada = null;
+      }
+
     }
 
     this.totalDias = registros.length;
@@ -112,7 +126,7 @@ export class StatisticsPage implements OnInit {
         {
           text: 'Sí',
           handler: async () => {
-            await this.storage.clear();
+            await this.storageService.clear();
             this.router.navigate(['/login']);
           }
         }

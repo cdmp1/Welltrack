@@ -20,7 +20,6 @@ import localeEs from '@angular/common/locales/es';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { HttpClientModule } from '@angular/common/http';
-import { IonicStorageModule } from '@ionic/storage-angular'; 
 
 
 registerLocaleData(localeEs);
@@ -30,10 +29,6 @@ registerLocaleData(localeEs);
 imports: [
   BrowserModule,
   IonicModule.forRoot(),
-  IonicStorageModule.forRoot({
-      name: '__mydb',
-      driverOrder: ['sqlite', 'indexeddb', 'localstorage']
-    }),
   AppRoutingModule,
   FormsModule,
   MatRadioModule,

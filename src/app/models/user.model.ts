@@ -1,9 +1,10 @@
 export interface User {
-    id?: number; 
-    usuario: string;
+    id?: number;
+    username: string;
     password: string;
     nombre: string;
-    apellidop: string;
-    apellidom: string;
+    apellido: string;
     email: string;
+    rol?: 'admin' | 'user';  
+    estado: 'activo' | 'bloqueado'; 
 }
