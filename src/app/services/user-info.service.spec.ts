@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing'; 
 import { UserInfoService } from './user-info.service';
+import { PlatformConfigService } from './platform-config.service';
 
 
 describe('UserInfoService', () => {
@@ -8,7 +9,10 @@ describe('UserInfoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule] 
+      imports: [HttpClientTestingModule],
+      providers: [
+        PlatformConfigService
+      ]
     });
     service = TestBed.inject(UserInfoService);
   });

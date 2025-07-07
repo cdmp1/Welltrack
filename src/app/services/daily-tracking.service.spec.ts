@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DailyTrackingService } from './daily-tracking.service';
+import { PlatformConfigService } from './platform-config.service';
 
 
 describe('DailyTrackingService', () => {
@@ -8,7 +9,8 @@ describe('DailyTrackingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule],
+      providers: [PlatformConfigService]  
     });
     service = TestBed.inject(DailyTrackingService);
   });

@@ -3,18 +3,22 @@ import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../models/user.model';
-import { environment } from 'src/environments/environment';
+import { PlatformConfigService } from './platform-config.service';
 
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private base = `${environment.apiUrl}/users`;
-
+  private base: string;
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private platformConfig: PlatformConfigService
+  ) {
+    this.base = `${this.platformConfig.getConfig().apiUrl}/users`;
+  }
 
   // Login por username (GET)
   login(username: string): Observable<User[]> {

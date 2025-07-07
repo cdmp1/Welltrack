@@ -4,6 +4,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { UserService } from '../services/user.service';
 import { StorageService } from '../services/storage.service';
 import { NetworkService } from '../services/network.service';
+import { PlatformConfigService } from '../services/platform-config.service';
 import { User } from '../models/user.model';
 import { finalize } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
@@ -20,6 +21,7 @@ export class LoginPage implements OnInit {
   username: string = '';
   password: string = '';
   isLoading = false;
+  platform: string = '';
 
   constructor(
     private router: Router,
@@ -27,7 +29,8 @@ export class LoginPage implements OnInit {
     private toastController: ToastController,
     private userService: UserService,
     private storageService: StorageService,
-    private networkService: NetworkService
+    private networkService: NetworkService,
+    private platformConfig: PlatformConfigService
   ) { }
 
   async ngOnInit() {
@@ -39,6 +42,9 @@ export class LoginPage implements OnInit {
       await this.storageService.remove('user');
       this.router.navigateByUrl('/login', { replaceUrl: true });
     }
+
+    const config = this.platformConfig.getConfig();
+    this.platform = config.platform;
   }
 
   formularioValido(): boolean {

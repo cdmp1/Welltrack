@@ -3,18 +3,23 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserInfo } from '../models/user-info.model'; 
-import { environment } from 'src/environments/environment'; 
+import { PlatformConfigService } from './platform-config.service';
 
 
 @Injectable({ providedIn: 'root' })
 export class UserInfoService {
-  private base = `${environment.apiUrl}/userInfo`;
+  private base: string;
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private platformConfig: PlatformConfigService
+  ) {
+    this.base = `${this.platformConfig.getConfig().apiUrl}/userInfo`;
+  }
 
   getUserInfoByUserId(userId: number): Observable<UserInfo[]> {
     return this.http.get<UserInfo[]>(`${this.base}?userId=${userId}`, this.httpOptions)
@@ -40,10 +45,8 @@ export class UserInfoService {
     console.error('Error en la petición HTTP:', error);
 
     if (error.error instanceof ErrorEvent) {
-      // Error del lado cliente / red
       return throwError(() => new Error('Ocurrió un error de red. Por favor, revisa tu conexión.'));
     } else {
-      // Error del lado servidor
       switch (error.status) {
         case 0:
           return throwError(() => new Error('No se pudo conectar con el servidor. Intenta más tarde.'));
@@ -60,5 +63,5 @@ export class UserInfoService {
       }
     }
   }
-  
+
 }

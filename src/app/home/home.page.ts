@@ -8,6 +8,7 @@ import { DbTaskService } from '../services/db-task.service';
 import { SyncService } from '../services/sync.service';
 import { PhotoService } from '../services/photo.service';
 import { StorageService } from '../services/storage.service';
+import { PlatformConfigService } from '../services/platform-config.service';
 import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserInfo } from '../models/user-info.model';
@@ -37,6 +38,8 @@ export class HomePage implements OnDestroy {
   imageSource: string | null = null;
   private networkSub!: Subscription;
 
+  platform: string = '';
+
   constructor(
     private router: Router,
     private alertCtrl: AlertController,
@@ -47,10 +50,13 @@ export class HomePage implements OnDestroy {
     private db: DbTaskService,
     private sync: SyncService,
     private photoService: PhotoService,
-    private storage: StorageService
+    private storage: StorageService,
+    private platformConfig: PlatformConfigService
   ) { }
 
   async ionViewWillEnter() {
+    this.platform = this.platformConfig.getConfig().platform;
+    
     // Sincronizar datos pendientes si está online
     if (await this.network.isOnline()) {
       await this.sync.syncPendingData();

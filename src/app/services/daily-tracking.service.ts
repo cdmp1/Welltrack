@@ -3,20 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { DbTaskService } from './db-task.service';
 import { NetworkService } from './network.service';
 import { DailyTracking } from '../models/daily-tracking.model';
-import { environment } from '../../environments/environment';
+import { PlatformConfigService } from './platform-config.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class DailyTrackingService {
-  private baseUrl = `${environment.apiUrl}/dailyTracking`;
+  private baseUrl : string;
 
   constructor(
     private http: HttpClient,
     private dbTaskService: DbTaskService,
-    private networkService: NetworkService
-  ) { }
+    private networkService: NetworkService,
+    private platformConfig: PlatformConfigService
+  ) { 
+    this.baseUrl = `${this.platformConfig.getConfig().apiUrl}/dailyTracking`;
+  }
 
   // Guarda un registro, intenta online, sino guarda offline
   async saveRecord(record: DailyTracking): Promise<void> {
