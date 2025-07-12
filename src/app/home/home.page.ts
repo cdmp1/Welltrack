@@ -56,7 +56,7 @@ export class HomePage implements OnDestroy {
 
   async ionViewWillEnter() {
     this.platform = this.platformConfig.getConfig().platform;
-    
+
     // Sincronizar datos pendientes si está online
     if (await this.network.isOnline()) {
       await this.sync.syncPendingData();
@@ -147,7 +147,7 @@ export class HomePage implements OnDestroy {
     });
     this.nombre = '';
     this.apellido = '';
-    this.showToast('Campos limpiados.', 'medium');
+    await this.showToast('Campos limpiados.', 'medium');
   }
 
   async guardarDatos() {
@@ -250,8 +250,14 @@ export class HomePage implements OnDestroy {
     console.log('Info:', this.userInfo);
   }
 
+
+  private get isE2E() {
+    return !!(window as any).Cypress;
+  }
+
   private async showToast(msg: string, color: string) {
-    const toast = await this.toast.create({ message: msg, duration: 2000, color, position: 'top' });
+    const duration = this.isE2E ? 5000 : 2000;
+    const toast = await this.toast.create({ message: msg, duration, color, position: 'top' });
     await toast.present();
   }
 

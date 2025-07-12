@@ -29,6 +29,19 @@
       "email": "admin@mail.com",
       "rol": "admin",
       "estado": "activo"
+    },
+    {
+      "userId": 4,
+      "id": "4",
+      "username": "user123",
+      "nombre": "JuanJuan",
+      "apellido": "Pérez",
+      "genero": "masculino",
+      "fechaNacimiento": "1995-07-10",
+      "objetivo": "ControlHabitos",
+      "recibirNotificaciones": true,
+      "estado": "activo",
+      "rol": "user"
     }
   ],
   "userInfo": [
@@ -39,6 +52,14 @@
       "fechaNacimiento": "1997-09-01T04:00:00.000Z",
       "recibirNotificaciones": true,
       "id": "1"
+    },
+    {
+      "userId": "4",
+      "genero": "masculino",
+      "objetivo": "DormirMejor",
+      "fechaNacimiento": "1995-07-10",
+      "recibirNotificaciones": true,
+      "id": "4"
     }
   ],
   "dailyTracking": [
@@ -63,6 +84,28 @@
       "notas": "Fue un buen día!",
       "sincronizado": true,
       "id": "4270"
+    },
+    {
+      "userId": 4,
+      "fecha": "2025-07-12",
+      "sueno": "bien",
+      "horasSueno": 9,
+      "animo": "feliz",
+      "ejercicio": false,
+      "notas": "Falta poco para las vacaciones!",
+      "sincronizado": true,
+      "id": "1fef"
+    },
+    {
+      "userId": "1",
+      "fecha": "2025-07-12",
+      "sueno": "excelente",
+      "horasSueno": 9,
+      "animo": "cansado",
+      "ejercicio": false,
+      "notas": "",
+      "sincronizado": true,
+      "id": "f58f"
     }
   ]
 }

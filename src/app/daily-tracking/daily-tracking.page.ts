@@ -34,6 +34,7 @@ export class DailyTrackingPage implements OnInit {
     private networkService: NetworkService
   ) { }
 
+
   async ngOnInit() {
     const user = await this.storageService.get<User>('user');
     if (user?.id) {
@@ -44,9 +45,11 @@ export class DailyTrackingPage implements OnInit {
     }
   }
 
+
   async onFechaChange() {
     await this.cargarSeguimiento();
   }
+
 
   async cargarSeguimiento() {
     if (!this.userId) return;
@@ -68,54 +71,72 @@ export class DailyTrackingPage implements OnInit {
     }
   }
 
+
   formularioValido(): boolean {
     return this.sueno.trim() !== '' && this.animo.trim() !== '';
   }
 
-  async guardarSeguimiento() {
-    if (!this.formularioValido()) {
-      await this.presentToast('Completa al menos el estado de ánimo y el sueño.', 'warning');
-      return;
-    }
 
-    const fechaSolo = this.fecha.split('T')[0];
+ async guardarSeguimiento() {
+  if (!this.formularioValido()) {
+    await this.presentToast('Completa al menos el estado de ánimo y el sueño.', 'warning');
+    return;
+  }
 
-    const nuevoRegistro = {
-      userId: this.userId,
-      fecha: fechaSolo,
-      sueno: this.sueno,
-      horasSueno: this.horasSueno ?? 0,
-      animo: this.animo,
-      ejercicio: this.ejercicio,
-      notas: this.notas,
-      sincronizado: false
-    };
+  const fechaSolo = this.fecha.split('T')[0];
 
-    const online = await this.networkService.isOnline();
+  const nuevoRegistro = {
+    userId: this.userId,
+    fecha: fechaSolo,
+    sueno: this.sueno,
+    horasSueno: this.horasSueno ?? 0,
+    animo: this.animo,
+    ejercicio: this.ejercicio,
+    notas: this.notas,
+    sincronizado: false
+  };
 
-    if (online) {
+  const online = await this.networkService.isOnline();
+
+  if (online) {
+    try {
+      await this.dailyTrackingService.saveRecordOnline({ ...nuevoRegistro, sincronizado: true });
+      await this.presentToast('¡Seguimiento guardado y sincronizado!', 'success');
+    } catch (error) {
+      console.error('Error en saveRecordOnline:', error);
+
       try {
-        await this.dailyTrackingService.saveRecordOnline({ ...nuevoRegistro, sincronizado: true });
-        await this.presentToast('¡Seguimiento guardado y sincronizado!', 'success');
-      } catch (error) {
         await this.dailyTrackingService.saveRecordOffline(nuevoRegistro);
         await this.presentToast('Guardado offline. Se sincronizará luego.', 'medium');
+      } catch (e) {
+        console.error('También falló guardar offline:', e);
       }
-    } else {
+    }
+  } else {
+    try {
       await this.dailyTrackingService.saveRecordOffline(nuevoRegistro);
       await this.presentToast('Guardado offline. Se sincronizará cuando haya conexión.', 'medium');
+    } catch (e) {
+      console.error('Error guardando offline sin conexión:', e);
     }
+  }
+} 
+
+  private get isE2E() {
+    return !!(window as any).Cypress;
   }
 
   private async presentToast(msg: string, color: string) {
+    const duration = this.isE2E ? 5000 : 2000;
     const toast = await this.toastController.create({
       message: msg,
-      duration: 2000,
+      duration,
       color,
       position: 'top'
     });
     await toast.present();
   }
+
 
   irAStatistics() {
     this.router.navigate(['/statistics']);

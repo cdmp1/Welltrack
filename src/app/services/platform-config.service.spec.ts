@@ -5,21 +5,22 @@ import { environment } from '../../environments/environment';
 
 
 describe('PlatformConfigService', () => {
-  let service: PlatformConfigService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [PlatformConfigService],
     });
-    spyOn(Capacitor, 'getPlatform').and.returnValue('android');
-    service = TestBed.inject(PlatformConfigService);
   });
 
   it('should be created', () => {
+    spyOn(Capacitor, 'getPlatform').and.returnValue('android');
+    const service = TestBed.inject(PlatformConfigService);
     expect(service).toBeTruthy();
   });
 
   it('should return config with apiUrl and platform', () => {
+    spyOn(Capacitor, 'getPlatform').and.returnValue('android');
+    const service = TestBed.inject(PlatformConfigService);
     const config = service.getConfig();
     expect(config.apiUrl).toBe(environment.apiUrl);
     expect(config.platform).toBe('android');
@@ -27,8 +28,9 @@ describe('PlatformConfigService', () => {
 
   it('should return platform as ios when simulated', () => {
     spyOn(Capacitor, 'getPlatform').and.returnValue('ios');
-    const newService = new PlatformConfigService();
-    const config = newService.getConfig();
+    const service = new PlatformConfigService();
+    const config = service.getConfig();
     expect(config.platform).toBe('ios');
   });
+  
 });
