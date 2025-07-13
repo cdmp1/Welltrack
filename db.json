@@ -29,32 +29,19 @@
       "email": "admin@mail.com",
       "rol": "admin",
       "estado": "activo"
-    },
-    {
-      "userId": 4,
-      "id": "4",
-      "username": "user123",
-      "nombre": "JuanJuan",
-      "apellido": "Pérez",
-      "genero": "masculino",
-      "fechaNacimiento": "1995-07-10",
-      "objetivo": "ControlHabitos",
-      "recibirNotificaciones": true,
-      "estado": "activo",
-      "rol": "user"
     }
   ],
   "userInfo": [
     {
-      "userId": 1,
+      "userId": "1",
       "genero": "femenino",
       "objetivo": "ControlHabitos",
       "fechaNacimiento": "1997-09-01T04:00:00.000Z",
-      "recibirNotificaciones": true,
+      "recibirNotificaciones": false,
       "id": "1"
     },
     {
-      "userId": "4",
+      "userId": null,
       "genero": "masculino",
       "objetivo": "DormirMejor",
       "fechaNacimiento": "1995-07-10",
@@ -99,13 +86,24 @@
     {
       "userId": "1",
       "fecha": "2025-07-12",
-      "sueno": "excelente",
-      "horasSueno": 9,
+      "sueno": "bien",
+      "horasSueno": 5,
       "animo": "cansado",
-      "ejercicio": false,
-      "notas": "",
+      "ejercicio": true,
+      "notas": "Cada vez menos para las vacaciones!!",
       "sincronizado": true,
       "id": "f58f"
+    },
+    {
+      "id": "dd7a",
+      "userId": "1",
+      "fecha": "2025-07-13",
+      "sueno": "bien",
+      "horasSueno": 5,
+      "animo": "cansado",
+      "ejercicio": true,
+      "notas": "",
+      "sincronizado": true
     }
   ]
 }
